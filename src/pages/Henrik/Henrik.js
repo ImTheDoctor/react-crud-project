@@ -1,22 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AddForm from "./components/AddForm";
 import StaticRowNames from "./components/StaticRowNames";
 import Userlist from "./components/Userlist";
-import data from "./db.js";
+
 import './style.css'
 
 export default function Henrik() {
 
-  const [userData, setUserData] = useState(data)
+  const [userData, setUserData] = useState({})
   const [users, setUsers] = useState([])
   const [editUserData, setEditUserData] = useState({
     isEdit: false,
     userIndex: null
   })
 
+  useEffect(() => {
+    const fetchData = async () => {
+      let data = await fetch("http://localhost:3001/players")
+      data = await data.json()
+      setUsers(data)
+    }
+    fetchData()
+  }, []);
+
   const isFilledFields = userData.name && userData.surname && userData.age && userData.nation && userData.cityOfBirth && userData.club && userData.job && userData.wage
 
-  const handleSubmitUser = (e) => {
+  const handleSubmitUser = async (e) => {
     e.preventDefault();
     if (isFilledFields) {
       if (editUserData.isEdit) {
@@ -27,22 +36,29 @@ export default function Henrik() {
           isEdit: false,
           userIndex: null
         })
+
+        await fetch(`http://localhost:3001/players/${editedData[editUserData.userIndex].id}`, {
+          method: 'PATCH',
+          body: JSON.stringify(userData),
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        });
       } else {
+        await fetch('http://localhost:3001/players', {
+          method: 'POST',
+          body: JSON.stringify(userData),
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        })
+
         setUsers((prevState) => [...prevState, userData])
       }
-      setUserData({
-        name: "",
-        surname: "",
-        age: "",
-        nation: "",
-        cityOfBirth: "",
-        club: "",
-        job: "",
-        wage: ""
-    })
+      setUserData({})
     }
   }
-
   const handleChange = (e, name) => {
     setUserData((prevState) => ({
       ...prevState,
@@ -54,62 +70,62 @@ export default function Henrik() {
     <section className="mySection">
       <div className="addPlayers">
         <h3>Add New Player</h3>
-        <form onSubmit={handleSubmitUser}>
+        <form onSubmit={handleSubmitUser} method="post">
 
           <AddForm
             placeholder='Enter Name'
             handleInputChange={handleChange}
-            value={userData.name}
+            value={userData.name || ''}
             fieldName='name'
           />
           <AddForm
             placeholder='Enter Surname'
             handleInputChange={handleChange}
-            value={userData.surname}
+            value={userData.surname || ''}
             fieldName='surname'
           />
           <AddForm
             placeholder='Enter Age'
             handleInputChange={handleChange}
-            value={userData.age}
+            value={userData.age || ''}
             fieldName='age'
           />
           <AddForm
             placeholder='Enter Nation'
             handleInputChange={handleChange}
-            value={userData.nation}
+            value={userData.nation || ''}
             fieldName='nation'
           />
           <AddForm
             placeholder='Enter City Of Birth'
             handleInputChange={handleChange}
-            value={userData.cityOfBirth}
+            value={userData.cityOfBirth || ''}
             fieldName='cityOfBirth'
           />
           <AddForm
             placeholder='Enter Club'
             handleInputChange={handleChange}
-            value={userData.club}
+            value={userData.club || ''}
             fieldName='club'
           />
           <AddForm
             placeholder='Enter Job'
             handleInputChange={handleChange}
-            value={userData.job}
+            value={userData.job || ''}
             fieldName='job'
           />
           <AddForm
             placeholder='Enter Wage'
             handleInputChange={handleChange}
-            value={userData.wage}
+            value={userData.wage || ''}
             fieldName='wage'
           />
 
-          <button 
-            type="submit" 
-            className={`myButton ${editUserData.isEdit ? 'edit' : 'add'}`} 
+          <button
+            type="submit"
+            className={`myButton ${editUserData.isEdit ? 'edit' : 'add'}`}
             disabled={!isFilledFields}>
-              {editUserData.isEdit ? 'EDIT' : 'ADD'}
+            {editUserData.isEdit ? 'EDIT' : 'ADD'}
           </button>
         </form>
       </div>
@@ -133,7 +149,8 @@ export default function Henrik() {
                   setEditData={setEditUserData}
                 />
               })
-              : <p>no data available</p>
+              : 
+                  <span>no data available</span>
             }
           </tbody>
         </table>

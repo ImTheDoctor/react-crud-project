@@ -12,6 +12,10 @@ export default function Userlist({ data, index, users, changeUsers, userData, se
   }
   function deleteData(index) {
     changeUsers(users.filter((user, userIndex) => userIndex !== index))
+
+    fetch(`http://localhost:3001/players/${data.id}`, {
+          method: 'DELETE',
+        });
   }
 
   return (
