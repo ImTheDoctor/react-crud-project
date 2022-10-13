@@ -35,7 +35,7 @@ const AllUser = () => {
   const getUserDetails = async () => {
     let response = await getUsers();
     console.log(response);
-    setUsers(response.data)
+    setUsers(response.data);
   }
 
   const deleteUserData = async (id) => {
@@ -51,7 +51,7 @@ const AllUser = () => {
           <Thead>
             <TableCell>Id</TableCell>
             <TableCell>Name</TableCell>
-            <TableCell>Username</TableCell>
+            <TableCell>Surname</TableCell>
             <TableCell>Email</TableCell>
             <TableCell>Phone</TableCell>
             <TableCell></TableCell>
@@ -63,11 +63,11 @@ const AllUser = () => {
 
 
           {
-            users.map((user,index) => (
+            users.data && users.data.map((user,index) => (
               <TBody key={index}>
                 <TableCell>{user.id}</TableCell>
                 <TableCell>{user.name}</TableCell>
-                <TableCell>{user.username}</TableCell>
+                <TableCell>{user.surname}</TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.phone}</TableCell>
                 <TableCell><Button variant="contained" style={{ marginRight: 5 }} component={Link} to={`/armine/edit/${user.id}`}>Edit</Button></TableCell>

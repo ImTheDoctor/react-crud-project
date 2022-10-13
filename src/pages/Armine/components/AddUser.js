@@ -13,9 +13,10 @@ const Container = styled(FormGroup)`
 `
 const initialValues = {
   name: '',
-  username: '',
+  surname: '',
   email: '',
-  phone: ''
+  phone: '',
+  password:''
 }
 
 
@@ -43,8 +44,8 @@ const AddUser = () => {
         <Input onChange={(e) => onValueChange(e)} name="name"/>
       </FormControl>
       <FormControl>
-        <InputLabel>Username</InputLabel>
-        <Input onChange={(e) => onValueChange(e)} name="username"/>
+        <InputLabel>Surname</InputLabel>
+        <Input onChange={(e) => onValueChange(e)} name="surname"/>
       </FormControl>
       <FormControl>
         <InputLabel>Email</InputLabel>
@@ -53,6 +54,10 @@ const AddUser = () => {
       <FormControl>
         <InputLabel>Phone</InputLabel>
         <Input onChange={(e) => onValueChange(e)} name="phone"/>
+      </FormControl>
+      <FormControl>
+        <InputLabel>Password</InputLabel>
+        <Input onChange={(e) => onValueChange(e)} name="password"/>
       </FormControl>
       <FormControl >
         <Button onClick={()=> addUserDetails()} variant='contained' >Add User</Button>
